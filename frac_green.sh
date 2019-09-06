@@ -1,0 +1,1 @@
+"${0%/*}"/../bin/python "${0%/*}"/frac_green.py "$@"
