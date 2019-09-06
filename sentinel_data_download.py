@@ -8,9 +8,9 @@ from find_sentinel_images import find_sentinel_images
 
 @click.command()
 @click.option('--aoi_geojson', required=True, type=click.Path(dir_okay=False, exists=True))
-@click.option('--start_date', required=True, type=click.DateTime(formats=('%Y%m%d')))
-@click.option('--end_date', required=True, type=click.DateTime(formats=('%Y%m%d')))
-@click.option('--platform', required=True, type=click.Choice(choices=('Sentinel-2', 'Sentinel-3')))
+@click.option('--start_date', required=True, type=click.DateTime(formats=['%Y%m%d']))
+@click.option('--end_date', required=True, type=click.DateTime(formats=['%Y%m%d']))
+@click.option('--platform', required=True, type=click.Choice(choices=['Sentinel-2', 'Sentinel-3']))
 @click.option('--username', required=True)
 @click.option('--password', required=True)
 @click.option('--download_path', required=True, type=click.Path(file_okay=False))
@@ -31,15 +31,16 @@ def main(aoi_geojson, start_date, end_date, platform, username, password, downlo
                                  "productlevel": "L2"}
 
     # Download the images
-    products = find_sentinel_images(aoi_geojson, start_date, end_date, platform, username,
+    products = find_sentinel_images(aoi_geojson, start_date.strftime("%Y%m%d"),
+                                    end_date.strftime("%Y%m%d"), platform, username,
                                     password, "", download_path, download=download_images,
                                     other_search_keywords=other_search_keywords)
 
-    print(products)
     now = datetime.today().strftime("%Y%m%d%H%M%S")
     with open(os.path.join(download_path, "sentinel_data_download_"+now+".txt"), "w") as fp:
         for product in products:
-            fp.write(product)
+            print(product['filename'])
+            fp.write(str(product))
 
 
 if __name__ == "__main__":
