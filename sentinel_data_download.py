@@ -6,7 +6,7 @@ import click
 from find_sentinel_images import find_sentinel_images
 
 
-@click.command
+@click.command()
 @click.option('--aoi_geojson', required=True, type=click.Path(dir_okay=False, exists=True))
 @click.option('--start_date', required=True, type=click.DateTime(formats=('%Y%m%d')))
 @click.option('--end_date', required=True, type=click.DateTime(formats=('%Y%m%d')))
