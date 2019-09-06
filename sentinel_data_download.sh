@@ -1,0 +1,1 @@
+"${0%/*}"/../bin/python "${0%/*}"/sentinel_data_download.py "$@"
