@@ -97,7 +97,7 @@ def _search_on_hub(user, password, hub_address, **search_keywords):
         hub = SentinelAPI(user, password, hub_address)
         products = hub.query(**search_keywords)
     except SentinelAPIError as e:
-        print("ERROR:" + str(e))
+        print(e)
         print(SentinelAPI.format_query(**search_keywords))
         products = {}
     return products
@@ -125,7 +125,7 @@ def _download_from_hub(product, download_path, user, password,
             hub = SentinelAPI(user, password, hub_address)
             p = hub.download(product["uuid"], download_path)
         except SentinelAPIError as e:
-            print("ERROR:" + str(e))
+            print(e)
             return ""
         with zipfile.ZipFile(p["path"], "r") as z:
             z.extractall(download_path)

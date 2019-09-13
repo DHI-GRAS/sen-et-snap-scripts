@@ -44,7 +44,7 @@ def main(aoi_geojson, start_date, end_date, platform, username, password, downlo
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        print("ERROR:" + str(e))
+    #try:
+    main()
+    #except Exception as e:
+    #    print("ERROR:" + str(e))
