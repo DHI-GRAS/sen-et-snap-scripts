@@ -14,7 +14,8 @@ import netCDF4
 import cdsapi
 
 from pyTSEB import meteo_utils as met
-from pyDMS.pyDMSUtils import saveImg, openRaster, getRasterInfo
+
+import gdal_utils as gu
 
 # Acceleration of gravity (m s-2)
 GRAVITY = 9.80665
@@ -71,7 +72,7 @@ def get_ECMWF_data(ecmwf_data_file, field, timedate_UTC, elev, time_zone):
         ea = _ECMWFRespampleData(ea, gt, proj, elev)
         p = _ECMWFRespampleData(p, gt, proj, elev)
         T_datum = _ECMWFRespampleData(T_datum, gt, proj, elev)
-        elev_data = raster_data(elev)
+        elev_data = gu.raster_data(elev)
         data = calc_air_temperature_blending_height(T_datum, ea, p, elev_data+Z_BH, z_ta=0)
 
     elif field == "vapour_pressure":
@@ -182,8 +183,8 @@ def _getECMWFTempInterpData(ncfile, var_name, before_I, after_I, frac):
 
 def _ECMWFRespampleData(data, gt, proj, template_file):
     # Subset and reproject to the template file extent and projection
-    ds_out = save_image(data, gt, proj, "MEM")
-    ds_out_proj = resample_with_gdalwarp(ds_out, template_file, resample_alg="cubicspline")
+    ds_out = gu.save_image(data, gt, proj, "MEM")
+    ds_out_proj = gu.resample_with_gdalwarp(ds_out, template_file, resample_alg="cubicspline")
     data = ds_out_proj.GetRasterBand(1).ReadAsArray()
     ds_out_proj = None
 
@@ -254,48 +255,3 @@ def _bracketing_dates(date_list, target_date):
     else:
         frac = float((after - target_date).total_seconds())/float((after-before).total_seconds())
     return date_list.index(before), date_list.index(after), frac
-
-
-def save_image(data, geotransform, projection, filename):
-    return saveImg(data, geotransform, projection, filename)
-
-
-def resample_with_gdalwarp(src, template, resample_alg="cubicspline"):
-    # Get template projection, extent and resolution
-    proj, gt, sizeX, sizeY, extent, _ = getRasterInfo(template)
-
-    # Resample with GDAL warp
-    out_ds = gdal.Warp("",
-                       src,
-                       format="MEM",
-                       dstSRS=proj,
-                       xRes=gt[1],
-                       yRes=gt[5],
-                       outputBounds=extent,
-                       resampleAlg=resample_alg)
-    return out_ds
-
-
-def raster_data(raster, bands=1, rect=None):
-
-    def _read_band(fid, band, rect):
-        if rect:
-            return fid.GetRasterBand(band).ReadAsArray(rect.x, rect.y, rect.width, rect.height)
-        else:
-            return fid.GetRasterBand(band).ReadAsArray()
-
-    fid, closeOnExit = openRaster(raster)
-    if type(bands) == int:
-        bands = [bands]
-
-    data = None
-    for band in bands:
-        if data is None:
-            data = _read_band(fid, band, rect)
-        else:
-            data = np.dstack((data, _read_band(fid, band, rect)))
-
-    if closeOnExit:
-        fid = None
-
-    return data

@@ -2,7 +2,7 @@ import click
 import tempfile
 import os
 
-import ecmwf_utils as eu
+import gdal_utils as gu
 import snappy_utils as su
 
 
@@ -24,7 +24,7 @@ def main(source, template, output, resample_algorithm):
     su.copy_bands_to_file(template, temp_template_path)
 
     # Wrap the source based on tamplate
-    wraped = eu.resample_with_gdalwarp(temp_source_path, temp_template_path, resample_algorithm)
+    wraped = gu.resample_with_gdalwarp(temp_source_path, temp_template_path, resample_algorithm)
 
     # Save with snappy
     name, geo_coding = su.get_product_info(template)[0:2]
