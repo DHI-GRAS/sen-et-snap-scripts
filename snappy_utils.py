@@ -6,13 +6,16 @@ sys.path.append(os.path.join(os.path.expanduser("~"), ".snap", "snap-python"))
 from snappy import ProductIO, Product, ProductData, ProductUtils, String
 
 
-def read_snappy_product(file_path, band_name):
+def read_snappy_product(file_path, band_name=None):
     prod = ProductIO.readProduct(file_path)
     width = prod.getSceneRasterWidth()
     height = prod.getSceneRasterHeight()
     geo_coding = prod.getSceneGeoCoding()
     data = np.empty((width, height))
-    band = prod.getBand(band_name)
+    if band_name is not None:
+        band = prod.getBand(band_name)
+    else:
+        band = prod.getBandAt(0)
     try:
         band.readPixels(0, 0, width, height, data)
     except AttributeError:
@@ -49,13 +52,15 @@ def write_snappy_product(file_path, bands, product_name, geo_coding):
     product.closeIO()
 
 
-def copy_bands_to_file(src_file_path, dst_file_path, bands):
-    # Get info from source produc
+def copy_bands_to_file(src_file_path, dst_file_path, bands=None):
+    # Get info from source product
     src_prod = ProductIO.readProduct(src_file_path)
     prod_name = src_prod.getName()
     prod_type = src_prod.getProductType()
     width = src_prod.getSceneRasterWidth()
     height = src_prod.getSceneRasterHeight()
+    if bands is None:
+        bands = src_prod.getBandNames()
 
     # Copy geocoding and selected bands from source to destination product
     dst_prod = Product(prod_name, prod_type, width, height)
@@ -79,3 +84,28 @@ def copy_bands_to_file(src_file_path, dst_file_path, bands):
     ProductIO.writeProduct(dst_prod, dst_file_path, file_type)
     src_prod.closeIO()
     dst_prod.closeIO()
+
+
+def get_bands_info(src_file_path):
+    # Get info from source product
+    src_prod = ProductIO.readProduct(src_file_path)
+    bands = src_prod.getBands()
+    bands_info = []
+    for band in bands:
+        bands_info.append({'band_name': band.getName(), 'description': band.getDescription(),
+                           'unit': band.getUnit()})
+    src_prod.closeIO()
+    return bands_info
+
+
+def get_product_info(src_file_path):
+    # Get info from source product
+    prod = ProductIO.readProduct(src_file_path)
+    width = prod.getSceneRasterWidth()
+    height = prod.getSceneRasterHeight()
+    geo_coding = prod.getSceneGeoCoding()
+    name = prod.getName()
+    prod_type = prod.getProductType()
+    prod.closeIO()
+
+    return name, geo_coding, prod_type,  width, height

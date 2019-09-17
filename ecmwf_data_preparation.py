@@ -1,8 +1,5 @@
 import click
-import numpy as np
 import tempfile
-
-from pyTSEB import TSEB
 
 import snappy_utils as su
 import ecmwf_utils as eu
