@@ -78,9 +78,9 @@ def copy_bands_to_file(src_file_path, dst_file_path, bands=None):
     elif ext == '.nc':
         file_type = 'NetCDF-CF'
     elif ext == '.tif':
-        file_type = 'GeoTIFF'
+        file_type = 'GeoTIFF-BigTIFF'
     else:
-        file_type = 'GeoTIFF'
+        file_type = 'GeoTIFF-BigTIFF'
     ProductIO.writeProduct(dst_prod, dst_file_path, file_type)
     src_prod.closeIO()
     dst_prod.closeIO()
