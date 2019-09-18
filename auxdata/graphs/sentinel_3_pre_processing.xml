@@ -1,0 +1,187 @@
+<graph id="Graph">
+  <version>1.0</version>
+  <node id="Read">
+    <operator>Read</operator>
+    <sources/>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!INPUT_Sentinel-3_L2A!</file>
+    </parameters>
+  </node>
+  <node id="Subset">
+    <operator>Subset</operator>
+    <sources>
+      <sourceProduct refid="Read"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands>LST,cloud_in,sat_zenith_tn,solar_zenith_tn,latitude_tx,longitude_tx</sourceBands>
+      <region/>
+      <referenceBand/>
+      <geoRegion/>
+      <subSamplingX>1</subSamplingX>
+      <subSamplingY>1</subSamplingY>
+      <fullSwath>false</fullSwath>
+      <tiePointGridNames/>
+      <copyMetadata>true</copyMetadata>
+    </parameters>
+  </node>
+  <node id="Subset_AOI">
+    <operator>Subset</operator>
+    <sources>
+      <sourceProduct refid="Subset"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands/>
+      <region>0,0,0,0</region>
+      <referenceBand/>
+      <geoRegion>!INPUT_AOI_WKT!</geoRegion>
+      <subSamplingX>1</subSamplingX>
+      <subSamplingY>1</subSamplingY>
+      <fullSwath>false</fullSwath>
+      <tiePointGridNames/>
+      <copyMetadata>true</copyMetadata>
+    </parameters>
+  </node>
+  <node id="Reproject">
+    <operator>Reproject</operator>
+    <sources>
+      <sourceProduct refid="Subset_AOI"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <wktFile/>
+      <crs>EPSG:4326</crs>
+      <resampling>Nearest</resampling>
+      <referencePixelX/>
+      <referencePixelY/>
+      <easting/>
+      <northing/>
+      <orientation/>
+      <pixelSizeX/>
+      <pixelSizeY/>
+      <width/>
+      <height/>
+      <tileSizeX/>
+      <tileSizeY/>
+      <orthorectify>false</orthorectify>
+      <elevationModelName/>
+      <noDataValue>NaN</noDataValue>
+      <includeTiePointGrids>true</includeTiePointGrids>
+      <addDeltaBands>false</addDeltaBands>
+    </parameters>
+  </node>
+  <node id="Subset_LST">
+    <operator>Subset</operator>
+    <sources>
+      <sourceProduct refid="Reproject"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands>LST</sourceBands>
+      <region/>
+      <referenceBand/>
+      <geoRegion/>
+      <subSamplingX>1</subSamplingX>
+      <subSamplingY>1</subSamplingY>
+      <fullSwath>false</fullSwath>
+      <tiePointGridNames/>
+      <copyMetadata>true</copyMetadata>
+    </parameters>
+  </node>
+  <node id="Subset_obs_geometry">
+    <operator>Subset</operator>
+    <sources>
+      <sourceProduct refid="Reproject"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands>sat_zenith_tn,solar_zenith_tn,longitude_tx,latitude_tx</sourceBands>
+      <region/>
+      <referenceBand/>
+      <geoRegion/>
+      <subSamplingX>1</subSamplingX>
+      <subSamplingY>1</subSamplingY>
+      <fullSwath>false</fullSwath>
+      <tiePointGridNames/>
+      <copyMetadata>true</copyMetadata>
+    </parameters>
+  </node>
+  <node id="Write_obs_geometry">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="Subset_obs_geometry"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!OUTPUT_observation_geometry!</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
+  <node id="BandMaths_mask">
+    <operator>BandMaths</operator>
+    <sources>
+      <sourceProduct refid="Reproject"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <targetBands>
+        <targetBand>
+          <name>newBand</name>
+          <type>float32</type>
+          <expression>if cloud_in &lt; 1 then 1 else 0</expression>
+          <description/>
+          <unit/>
+          <noDataValue>0.0</noDataValue>
+        </targetBand>
+      </targetBands>
+      <variables/>
+    </parameters>
+  </node>
+  <node id="Write_mask">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="BandMaths_mask"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!OUTPUT_mask!</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
+  <node id="Write_LST">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="Subset_LST"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!OUTPUT_LST!</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
+  <applicationData id="Presentation">
+    <Description/>
+    <node id="Read">
+            <displayPosition x="15.0" y="135.0"/>
+    </node>
+    <node id="Subset">
+      <displayPosition x="101.0" y="134.0"/>
+    </node>
+    <node id="Subset_AOI">
+      <displayPosition x="186.0" y="135.0"/>
+    </node>
+    <node id="Reproject">
+      <displayPosition x="276.0" y="134.0"/>
+    </node>
+    <node id="Subset_LST">
+      <displayPosition x="378.0" y="85.0"/>
+    </node>
+    <node id="Subset_obs_geometry">
+      <displayPosition x="377.0" y="136.0"/>
+    </node>
+    <node id="Write_obs_geometry">
+      <displayPosition x="543.0" y="136.0"/>
+    </node>
+    <node id="BandMaths_mask">
+      <displayPosition x="374.0" y="193.0"/>
+    </node>
+    <node id="Write_mask">
+      <displayPosition x="542.0" y="193.0"/>
+    </node>
+    <node id="Write_LST">
+            <displayPosition x="541.0" y="89.0"/>
+    </node>
+  </applicationData>
+</graph>

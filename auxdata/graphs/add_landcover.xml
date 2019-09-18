@@ -1,0 +1,63 @@
+<graph id="Graph">
+  <version>1.0</version>
+  <node id="Read">
+    <operator>Read</operator>
+    <sources/>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!INPUT_Sentinel-2_Mask!</file>
+    </parameters>
+  </node>
+  <node id="AddLandCover">
+    <operator>AddLandCover</operator>
+    <sources>
+      <sourceProduct refid="Read"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <landCoverNames>CCILandCover-2015</landCoverNames>
+      <externalFiles/>
+      <resamplingMethod>NEAREST_NEIGHBOUR</resamplingMethod>
+    </parameters>
+  </node>
+  <node id="Subset">
+    <operator>Subset</operator>
+    <sources>
+      <sourceProduct refid="AddLandCover"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands>CCILandCover-2015</sourceBands>
+      <region/>
+      <referenceBand/>
+      <geoRegion/>
+      <subSamplingX>1</subSamplingX>
+      <subSamplingY>1</subSamplingY>
+      <fullSwath>false</fullSwath>
+      <tiePointGridNames/>
+      <copyMetadata>true</copyMetadata>
+    </parameters>
+  </node>
+  <node id="Write">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="Subset"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!OUTPUT_CCI_landcover!</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
+  <applicationData id="Presentation">
+    <Description/>
+    <node id="Read">
+            <displayPosition x="37.0" y="134.0"/>
+    </node>
+    <node id="AddLandCover">
+      <displayPosition x="160.0" y="134.0"/>
+    </node>
+    <node id="Subset">
+      <displayPosition x="291.0" y="135.0"/>
+    </node>
+    <node id="Write">
+            <displayPosition x="407.0" y="135.0"/>
+    </node>
+  </applicationData>
+</graph>

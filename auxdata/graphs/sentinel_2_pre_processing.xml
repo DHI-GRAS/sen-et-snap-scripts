@@ -1,0 +1,187 @@
+<graph id="Graph">
+  <version>1.0</version>
+  <node id="Read">
+    <operator>Read</operator>
+    <sources/>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!INPUT_Sentinel-2_L2A!</file>
+    </parameters>
+  </node>
+  <node id="Resample">
+    <operator>Resample</operator>
+    <sources>
+      <sourceProduct refid="Read"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <referenceBand/>
+      <targetWidth/>
+      <targetHeight/>
+      <targetResolution>20</targetResolution>
+      <upsampling>Nearest</upsampling>
+      <downsampling>First</downsampling>
+      <flagDownsampling>First</flagDownsampling>
+      <resamplingPreset/>
+      <bandResamplings/>
+      <resampleOnPyramidLevels>true</resampleOnPyramidLevels>
+    </parameters>
+  </node>
+  <node id="Subset">
+    <operator>Subset</operator>
+    <sources>
+      <sourceProduct refid="Resample"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands>B2,B3,B4,B5,B6,B7,B8A,B11,B12,quality_aot,quality_wvp,quality_cloud_confidence,quality_snow_confidence,quality_scene_classification,view_zenith_mean,view_azimuth_mean,sun_zenith,sun_azimuth,view_zenith_B1,view_azimuth_B1,view_zenith_B2,view_azimuth_B2,view_zenith_B3,view_azimuth_B3,view_zenith_B4,view_azimuth_B4,view_zenith_B5,view_azimuth_B5,view_zenith_B6,view_azimuth_B6,view_zenith_B7,view_azimuth_B7,view_zenith_B8,view_azimuth_B8,view_zenith_B8A,view_azimuth_B8A,view_zenith_B9,view_azimuth_B9,view_zenith_B10,view_azimuth_B10,view_zenith_B11,view_azimuth_B11,view_zenith_B12,view_azimuth_B12</sourceBands>
+      <region>0,0,5490,5490</region>
+      <referenceBand>B2</referenceBand>
+      <geoRegion/>
+      <subSamplingX>1</subSamplingX>
+      <subSamplingY>1</subSamplingY>
+      <fullSwath>false</fullSwath>
+      <tiePointGridNames/>
+      <copyMetadata>true</copyMetadata>
+    </parameters>
+  </node>
+  <node id="BiophysicalOp">
+    <operator>BiophysicalOp</operator>
+    <sources>
+      <sourceProduct refid="Subset"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <computeLAI>true</computeLAI>
+      <computeFapar>true</computeFapar>
+      <computeFcover>true</computeFcover>
+      <computeCab>true</computeCab>
+      <computeCw>true</computeCw>
+    </parameters>
+  </node>
+  <node id="Write_reflectance">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="Subset_reflectance"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!OUTPUT_reflectance!</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
+  <node id="Subset_reflectance">
+    <operator>Subset</operator>
+    <sources>
+      <sourceProduct refid="Subset"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands>B2,B3,B4,B5,B6,B7,B8A,B11,B12</sourceBands>
+      <region>0,0,5490,5490</region>
+      <referenceBand>B2</referenceBand>
+      <geoRegion/>
+      <subSamplingX>1</subSamplingX>
+      <subSamplingY>1</subSamplingY>
+      <fullSwath>false</fullSwath>
+      <tiePointGridNames/>
+      <copyMetadata>true</copyMetadata>
+    </parameters>
+  </node>
+  <node id="Subset_sun_zenith">
+    <operator>Subset</operator>
+    <sources>
+      <sourceProduct refid="Subset"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands>sun_zenith</sourceBands>
+      <region>0,0,5490,5490</region>
+      <referenceBand>B2</referenceBand>
+      <geoRegion/>
+      <subSamplingX>1</subSamplingX>
+      <subSamplingY>1</subSamplingY>
+      <fullSwath>false</fullSwath>
+      <tiePointGridNames/>
+      <copyMetadata>true</copyMetadata>
+    </parameters>
+  </node>
+  <node id="Write_sun_zenith">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="Subset_sun_zenith"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!OUTPUT_sun_zenith_angle!</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
+  <node id="BandMaths_mask">
+    <operator>BandMaths</operator>
+    <sources>
+      <sourceProduct refid="Subset"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <targetBands>
+        <targetBand>
+          <name>newBand</name>
+          <type>float32</type>
+          <expression>if (quality_scene_classification &gt;= 8 &amp;&amp;  quality_scene_classification &lt;= 10) || quality_scene_classification == 3 then 0 else 1</expression>
+          <description/>
+          <unit/>
+          <noDataValue>0.0</noDataValue>
+        </targetBand>
+      </targetBands>
+      <variables/>
+    </parameters>
+  </node>
+  <node id="Write_mask">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="BandMaths_mask"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!OUTPUT_mask!</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
+  <node id="Write_biophysical">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="BiophysicalOp"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!OUTPUT_biophysical!</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
+  <applicationData id="Presentation">
+    <Description/>
+    <node id="Read">
+            <displayPosition x="37.0" y="134.0"/>
+    </node>
+    <node id="Resample">
+      <displayPosition x="142.0" y="133.0"/>
+    </node>
+    <node id="Subset">
+      <displayPosition x="256.0" y="136.0"/>
+    </node>
+    <node id="BiophysicalOp">
+      <displayPosition x="371.0" y="75.0"/>
+    </node>
+    <node id="Write_reflectance">
+      <displayPosition x="523.0" y="136.0"/>
+    </node>
+    <node id="Subset_reflectance">
+      <displayPosition x="380.0" y="136.0"/>
+    </node>
+    <node id="Subset_sun_zenith">
+      <displayPosition x="374.0" y="215.0"/>
+    </node>
+    <node id="Write_sun_zenith">
+      <displayPosition x="524.0" y="217.0"/>
+    </node>
+    <node id="BandMaths_mask">
+      <displayPosition x="369.0" y="276.0"/>
+    </node>
+    <node id="Write_mask">
+      <displayPosition x="523.0" y="277.0"/>
+    </node>
+    <node id="Write_biophysical">
+            <displayPosition x="524.0" y="77.0"/>
+    </node>
+  </applicationData>
+</graph>
