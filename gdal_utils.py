@@ -1,10 +1,18 @@
 import tempfile
 import os.path as pth
+import os
 
 import numpy as np
-from osgeo import gdal
 
 from pyDMS.pyDMSUtils import saveImg, openRaster, getRasterInfo
+
+#Since the conda environment is not active
+#make sure to set the env_variables needed for gdal
+import os
+cur_path =  os.path.dirname(os.path.abspath(__file__))
+os.environ["PROJ_LIB"] = os.path.join(cur_path, "../share/proj")
+os.environ["GDAL_DATA"] = os.path.join(cur_path, "../share/gdal")
+from osgeo import gdal
 
 
 def slope_from_dem(dem_file_path, output=None):
