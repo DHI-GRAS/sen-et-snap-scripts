@@ -13,13 +13,14 @@ import snappy_utils as su
 def main(lai_map, landcover_params_map, soil_roughness, output_file):
     
     lai, geo_coding = su.read_snappy_product(lai_map, 'lai')
-    height = su.read_snappy_product(landcover_params_map, 'veg_height')[0]
-    height_width_ratio = su.read_snappy_product(landcover_params_map, 'veg_height_width_ratio')[0]
-    fractional_cover = su.read_snappy_product(landcover_params_map, 'veg_fractional_cover')[0]
-    classification = su.read_snappy_product(landcover_params_map, 'igbp_classification')[0]
+    lai = lai.astype(np.float32)
+    height = su.read_snappy_product(landcover_params_map, 'veg_height')[0].astype(np.float32)
+    height_width_ratio = su.read_snappy_product(landcover_params_map, 'veg_height_width_ratio')[0].astype(np.float32)
+    fractional_cover = su.read_snappy_product(landcover_params_map, 'veg_fractional_cover')[0].astype(np.float32)
+    classification = su.read_snappy_product(landcover_params_map, 'igbp_classification')[0].astype(np.float32)
     
-    z_OM = np.full(lai.shape, np.nan)
-    d_0 = np.full(lai.shape, np.nan)
+    z_OM = np.full(lai.shape, np.nan, np.float32)
+    d_0 = np.full(lai.shape, np.nan, np.float32)
 
     i = lai <= 0
     z_OM[i] = soil_roughness

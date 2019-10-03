@@ -15,11 +15,12 @@ def main(sza_file, biophysical_file, min_frac_green, output_file):
 
     # Read the required data
     fapar, geo_coding = su.read_snappy_product(biophysical_file, 'fapar')
-    lai = su.read_snappy_product(biophysical_file, 'lai')[0]
-    sza = su.read_snappy_product(sza_file, 'sun_zenith')[0]
+    fapar = fapar.astype(np.float32)
+    lai = su.read_snappy_product(biophysical_file, 'lai')[0].astype(np.float32)
+    sza = su.read_snappy_product(sza_file, 'sun_zenith')[0].astype(np.float32)
 
     # Calculate fraction of vegetation which is green
-    f_g = np.ones(lai.shape)
+    f_g = np.ones(lai.shape, np.float32)
     # Iterate until f_g converges
     converged = np.zeros(lai.shape, dtype=bool)
     # For pixels where LAI or FAPAR are below tolerance threshold of the S2 biophysical

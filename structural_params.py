@@ -41,8 +41,9 @@ def main(landcover_map, lai_map, fgv_map, landcover_band, lookup_table, produce_
               ]
     
     landcover, geo_coding = su.read_snappy_product(landcover_map, landcover_band)
-    lai = su.read_snappy_product(lai_map, 'lai')[0]
-    fg = su.read_snappy_product(fgv_map, 'frac_green')[0]
+    landcover = landcover.astype(np.float32)
+    lai = su.read_snappy_product(lai_map, 'lai')[0].astype(np.float32)
+    fg = su.read_snappy_product(fgv_map, 'frac_green')[0].astype(np.float32)
     with open(lookup_table, 'r') as fp:
         lines = fp.readlines()
     headers = lines[0].rstrip().split(';')
@@ -56,10 +57,9 @@ def main(landcover_map, lai_map, fgv_map, landcover_band, lookup_table, produce_
             return
 
     band_data = []
+    param_value = np.ones(landcover.shape, np.float32) + np.nan
 
     if produce_vh:
-        param_value = np.ones(landcover.shape) + np.nan
-
         for lc_class in np.unique(landcover[~np.isnan(landcover)]):
             lc_pixels = np.where(landcover == lc_class)
             lc_index = lut["landcover_class"].index(lc_class)

@@ -16,8 +16,9 @@ def main(meteo_product, at_band, vp_band, ap_band, at_height, output_file):
     
 
     at, geo_coding = su.read_snappy_product(meteo_product, at_band)
-    vp = su.read_snappy_product(meteo_product, vp_band)[0]
-    ap = su.read_snappy_product(meteo_product, ap_band)[0]
+    at = at.astype(np.float32)
+    vp = su.read_snappy_product(meteo_product, vp_band)[0].astype(np.float32)
+    ap = su.read_snappy_product(meteo_product, ap_band)[0].astype(np.float32)
 
     irrad = rad.calc_longwave_irradiance(vp, at, ap, at_height)
     

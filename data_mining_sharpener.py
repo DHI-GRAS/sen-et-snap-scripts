@@ -49,7 +49,7 @@ def main(sentinel_2_reflectance, sentinel_3_lst, high_res_dem, high_res_geom, ls
     ftime = date_time_utc.hour + date_time_utc.minute/60.0
     cos_theta = incidence_angle_tilted(lat, lon, doy, ftime, stdlon=0, A_ZS=aspect, slope=slope)
     proj, gt = gu.raster_info(temp_dem_file)[0:2]
-    temp_cos_theta_file = pth.splitext(temp_dem_file)[0]+'_cos_theta.tif'
+    temp_cos_theta_file = pth.splitext(temp_dem_file)[0] + '_cos_theta.tif'
     fp = gu.save_image(cos_theta, gt, proj, temp_cos_theta_file)
     fp = None
     slope = None

@@ -22,27 +22,28 @@ def main(lsp_product, lai_product, csp_product, mi_product, sza_product, soil_re
 
     
     refl_vis_c, geo_coding = su.read_snappy_product(lsp_product, 'refl_vis_c')
-    refl_nir_c = su.read_snappy_product(lsp_product, 'refl_nir_c')[0]
-    trans_vis_c = su.read_snappy_product(lsp_product, 'trans_vis_c')[0] 
-    trans_nir_c = su.read_snappy_product(lsp_product, 'trans_nir_c')[0]
+    refl_vis_c = refl_vis_c.astype(np.float32)
+    refl_nir_c = su.read_snappy_product(lsp_product, 'refl_nir_c')[0].astype(np.float32)
+    trans_vis_c = su.read_snappy_product(lsp_product, 'trans_vis_c')[0].astype(np.float32)
+    trans_nir_c = su.read_snappy_product(lsp_product, 'trans_nir_c')[0].astype(np.float32)
 
-    lai = su.read_snappy_product(lai_product, 'lai')[0]
+    lai = su.read_snappy_product(lai_product, 'lai')[0].astype(np.float32)
 
 
-    lad = su.read_snappy_product(csp_product, 'veg_inclination_distribution')[0]
-    frac_cover = su.read_snappy_product(csp_product, 'veg_fractional_cover')[0]
-    hw_ratio = su.read_snappy_product(csp_product, 'veg_height_width_ratio')[0]
+    lad = su.read_snappy_product(csp_product, 'veg_inclination_distribution')[0].astype(np.float32)
+    frac_cover = su.read_snappy_product(csp_product, 'veg_fractional_cover')[0].astype(np.float32)
+    hw_ratio = su.read_snappy_product(csp_product, 'veg_height_width_ratio')[0].astype(np.float32)
     
     
-    p = su.read_snappy_product(mi_product, 'air_pressure')[0]
-    irradiance = su.read_snappy_product(mi_product, 'clear_sky_solar_radiation')[0]
+    p = su.read_snappy_product(mi_product, 'air_pressure')[0].astype(np.float32)
+    irradiance = su.read_snappy_product(mi_product, 'clear_sky_solar_radiation')[0].astype(np.float32)
     
-    sza = su.read_snappy_product(sza_product, 'solar_zenith_tn')[0]
+    sza = su.read_snappy_product(sza_product, 'solar_zenith_tn')[0].astype(np.float32)
    
-    net_rad_c = np.zeros(lai.shape)
-    net_rad_s = np.zeros(lai.shape)
-    soil_ref_vis = np.full(lai.shape, soil_ref_vis)
-    soil_ref_nir = np.full(lai.shape, soil_ref_nir)
+    net_rad_c = np.zeros(lai.shape, np.float32)
+    net_rad_s = np.zeros(lai.shape, np.float32)
+    soil_ref_vis = np.full(lai.shape, soil_ref_vis, np.float32)
+    soil_ref_nir = np.full(lai.shape, soil_ref_nir, np.float32)
 
     #Estimate diffuse and direct irradiance
     difvis, difnir, fvis, fnir = rad.calc_difuse_ratio(irradiance, sza, p)
@@ -87,7 +88,7 @@ def main(lsp_product, lai_product, csp_product, mi_product, sza_product, soil_re
     su.write_snappy_product(output_file, band_data, 'netShortwaveRadiation', geo_coding)
 
 if __name__ == "__main__":
-    #try:
-    main()
-    #except Exception as e:
-    #    print("ERROR:" + str(e))
+    try:
+        main()
+    except Exception as e:
+        print("ERROR:" + str(e))

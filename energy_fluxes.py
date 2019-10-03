@@ -32,44 +32,45 @@ def main(lst, lst_vza, lai, csp, fgv, ar, mi, nsr, li, mask, soil_roughness,alph
         output_file):
 
     # Read the required data
-    lst = su.read_snappy_product(lst, 'sharpened_LST')[0]
-    vza = su.read_snappy_product(lst_vza, 'sat_zenith_tn')[0]
+    lst = su.read_snappy_product(lst, 'sharpened_LST')[0].astype(np.float32)
+    vza = su.read_snappy_product(lst_vza, 'sat_zenith_tn')[0].astype(np.float32)
     lai, geo_coding = su.read_snappy_product(lai, 'lai')
-    lad = su.read_snappy_product(csp, 'veg_inclination_distribution')[0]
-    frac_cover = su.read_snappy_product(csp, 'veg_fractional_cover')[0]
-    h_w_ratio = su.read_snappy_product(csp, 'veg_height_width_ratio')[0]
-    leaf_width = su.read_snappy_product(csp, 'veg_leaf_width')[0]
-    veg_height = su.read_snappy_product(csp, 'veg_height')[0]
-    landcover_band = su.read_snappy_product(csp, 'igbp_classification')[0]
-    frac_green = su.read_snappy_product(fgv, 'frac_green')[0]
-    z_0M = su.read_snappy_product(ar, 'roughness_length')[0]
-    d_0 = su.read_snappy_product(ar, 'zero_plane_displacement')[0]
-    ta = su.read_snappy_product(mi, 'air_temperature')[0]
-    u = su.read_snappy_product(mi, 'wind_speed')[0]
-    ea = su.read_snappy_product(mi, 'vapour_pressure')[0]
-    p = su.read_snappy_product(mi, 'air_pressure')[0]
-    shortwave_rad_c = su.read_snappy_product(nsr, 'net_shortwave_radiation_canopy')[0]
-    shortwave_rad_s = su.read_snappy_product(nsr, 'net_shortwave_radiation_soil')[0]
-    longwave_irrad = su.read_snappy_product(li, 'longwave_irradiance')[0]
-    mask = su.read_snappy_product(mask, 'mask')[0]
+    lai = lai.astype(np.float32)
+    lad = su.read_snappy_product(csp, 'veg_inclination_distribution')[0].astype(np.float32)
+    frac_cover = su.read_snappy_product(csp, 'veg_fractional_cover')[0].astype(np.float32)
+    h_w_ratio = su.read_snappy_product(csp, 'veg_height_width_ratio')[0].astype(np.float32)
+    leaf_width = su.read_snappy_product(csp, 'veg_leaf_width')[0].astype(np.float32)
+    veg_height = su.read_snappy_product(csp, 'veg_height')[0].astype(np.float32)
+    landcover_band = su.read_snappy_product(csp, 'igbp_classification')[0].astype(np.float32)
+    frac_green = su.read_snappy_product(fgv, 'frac_green')[0].astype(np.float32)
+    z_0M = su.read_snappy_product(ar, 'roughness_length')[0].astype(np.float32)
+    d_0 = su.read_snappy_product(ar, 'zero_plane_displacement')[0].astype(np.float32)
+    ta = su.read_snappy_product(mi, 'air_temperature')[0].astype(np.float32)
+    u = su.read_snappy_product(mi, 'wind_speed')[0].astype(np.float32)
+    ea = su.read_snappy_product(mi, 'vapour_pressure')[0].astype(np.float32)
+    p = su.read_snappy_product(mi, 'air_pressure')[0].astype(np.float32)
+    shortwave_rad_c = su.read_snappy_product(nsr, 'net_shortwave_radiation_canopy')[0].astype(np.float32)
+    shortwave_rad_s = su.read_snappy_product(nsr, 'net_shortwave_radiation_soil')[0].astype(np.float32)
+    longwave_irrad = su.read_snappy_product(li, 'longwave_irradiance')[0].astype(np.float32)
+    mask = su.read_snappy_product(mask, 'mask')[0].astype(np.float32)
 
     # Model outputs
-    t_s = np.full(lai.shape, np.nan)
-    t_c = np.full(lai.shape, np.nan)
-    t_ac = np.full(lai.shape, np.nan)
-    h_s = np.full(lai.shape, np.nan)
-    h_c = np.full(lai.shape, np.nan)
-    le_s = np.full(lai.shape, np.nan)
-    le_c = np.full(lai.shape, np.nan)
-    g = np.full(lai.shape, np.nan)
-    ln_s = np.full(lai.shape, np.nan)
-    ln_c = np.full(lai.shape, np.nan)
-    r_s = np.full(lai.shape, np.nan)
-    r_x = np.full(lai.shape, np.nan)
-    r_a = np.full(lai.shape, np.nan)
-    u_friction = np.full(lai.shape, np.nan)
-    mol = np.full(lai.shape, np.nan)
-    n_iterations = np.full(lai.shape, np.nan)
+    t_s = np.full(lai.shape, np.nan, np.float32)
+    t_c = np.full(lai.shape, np.nan, np.float32)
+    t_ac = np.full(lai.shape, np.nan, np.float32)
+    h_s = np.full(lai.shape, np.nan, np.float32)
+    h_c = np.full(lai.shape, np.nan, np.float32)
+    le_s = np.full(lai.shape, np.nan, np.float32)
+    le_c = np.full(lai.shape, np.nan, np.float32)
+    g = np.full(lai.shape, np.nan, np.float32)
+    ln_s = np.full(lai.shape, np.nan, np.float32)
+    ln_c = np.full(lai.shape, np.nan, np.float32)
+    r_s = np.full(lai.shape, np.nan, np.float32)
+    r_x = np.full(lai.shape, np.nan, np.float32)
+    r_a = np.full(lai.shape, np.nan, np.float32)
+    u_friction = np.full(lai.shape, np.nan, np.float32)
+    mol = np.full(lai.shape, np.nan, np.float32)
+    n_iterations = np.full(lai.shape, np.nan, np.float32)
     flag = np.full(lai.shape, 255)
 
     # ======================================
@@ -179,11 +180,11 @@ def main(lst, lst_vza, lai, csp, fgv, ar, mi, nsr, li, mask, soil_roughness,alph
                 ]
         )
     
-    su.write_snappy_product(output_file,band_data, turbulentFluxes, geo_coding)
+    su.write_snappy_product(output_file, band_data, 'turbulentFluxes', geo_coding)
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        print("ERROR:" + str(e))
+    #try:
+    main()
+    #except Exception as e:
+    #    print("ERROR:" + str(e))

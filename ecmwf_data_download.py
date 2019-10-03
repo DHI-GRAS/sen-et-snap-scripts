@@ -35,7 +35,7 @@ def main(area, start_date, end_date, download_path, download_pressure,
         
         download_CDS_data(start_date, end_date, fields, download_path, overwrite, area)
 if __name__ == "__main__":
-    #try:
-    main()
-    #except Exception as e:
-    #    print("ERROR:" + str(e))
+    try:
+        main()
+    except Exception as e:
+        print("ERROR:" + str(e))

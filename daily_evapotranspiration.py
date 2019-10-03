@@ -13,8 +13,9 @@ def main(ief_file, mi_file, output_file):
 
     # Read the required data
     le_band, geo_coding = su.read_snappy_product(ief_file, 'latent_heat_flux')
-    sdn_band = su.read_snappy_product(mi_file, 'clear_sky_solar_radiation')[0]
-    sdn_24_band = su.read_snappy_product(mi_file, 'average_daily_solar_irradiance')[0]
+    le_band = le_band.astype(np.float32)
+    sdn_band = su.read_snappy_product(mi_file, 'clear_sky_solar_radiation')[0].astype(np.float32)
+    sdn_24_band = su.read_snappy_product(mi_file, 'average_daily_solar_irradiance')[0].astype(np.float32)
 
     le = np.array(le_band)
     sdn = np.array(sdn_band)
