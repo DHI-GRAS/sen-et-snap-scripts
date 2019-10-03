@@ -17,10 +17,10 @@ import snappy_utils as su
 @click.option('--nsr', required=True, type=click.Path(dir_okay=False, exists=True))
 @click.option('--li', required=True, type=click.Path(dir_okay=False, exists=True))
 @click.option('--mask', required=True, type=click.Path(dir_okay=False, exists=True))
-@click.option('--soil_roughness', required=True, type=click.Float)
-@click.option('--alpha_pt', required=True, type=click.Float)
-@click.option('--atmospheric_measurement_height', required=True, type=click.Float)
-@click.option('--green_vegetation_emissivity', required=True, type=click.Float)
+@click.option('--soil_roughness', required=True, type=click.FLOAT)
+@click.option('--alpha_pt', required=True, type=click.FLOAT)
+@click.option('--atmospheric_measurement_height', required=True, type=click.FLOAT)
+@click.option('--green_vegetation_emissivity', required=True, type=click.FLOAT)
 @click.option('--soil_emissivity', required=True, type=click.FLOAT)
 @click.option('--save_component_fluxes', required=True, type=click.BOOL)
 @click.option('--save_component_temperature', required=True, type=click.BOOL)
@@ -32,8 +32,8 @@ def main(lst, lst_vza, lai, csp, fgv, ar, mi, nsr, li, mask, soil_roughness,alph
         output_file):
 
     # Read the required data
-    lst = su.read_snappy_product(lst, 'LST')[0]
-    vza = su.read_snappy_product(lst_vza, 'vza')[0]
+    lst = su.read_snappy_product(lst, 'sharpened_LST')[0]
+    vza = su.read_snappy_product(lst_vza, 'sat_zenith_tn')[0]
     lai, geo_coding = su.read_snappy_product(lai, 'lai')
     lad = su.read_snappy_product(csp, 'veg_inclination_distribution')[0]
     frac_cover = su.read_snappy_product(csp, 'veg_fractional_cover')[0]
@@ -43,13 +43,13 @@ def main(lst, lst_vza, lai, csp, fgv, ar, mi, nsr, li, mask, soil_roughness,alph
     landcover_band = su.read_snappy_product(csp, 'igbp_classification')[0]
     frac_green = su.read_snappy_product(fgv, 'frac_green')[0]
     z_0M = su.read_snappy_product(ar, 'roughness_length')[0]
-    d_0 = su.read_snappy_product(ar, 'zero-plane_displacement')[0]
+    d_0 = su.read_snappy_product(ar, 'zero_plane_displacement')[0]
     ta = su.read_snappy_product(mi, 'air_temperature')[0]
     u = su.read_snappy_product(mi, 'wind_speed')[0]
     ea = su.read_snappy_product(mi, 'vapour_pressure')[0]
     p = su.read_snappy_product(mi, 'air_pressure')[0]
-    shortwave_rad_c = su.read_snappy_product(nsr, 'canopy_net_shortwave_radiation')[0]
-    shortwave_rad_s = su.read_snappy_product(nsr, 'soil_net_shortwave_radiation')[0]
+    shortwave_rad_c = su.read_snappy_product(nsr, 'net_shortwave_radiation_canopy')[0]
+    shortwave_rad_s = su.read_snappy_product(nsr, 'net_shortwave_radiation_soil')[0]
     longwave_irrad = su.read_snappy_product(li, 'longwave_irradiance')[0]
     mask = su.read_snappy_product(mask, 'mask')[0]
 
@@ -124,7 +124,7 @@ def main(lst, lst_vza, lai, csp, fgv, ar, mi, nsr, li, mask, soil_roughness,alph
                                     d_0[i],
                                     atmospheric_measurement_height,
                                     atmospheric_measurement_height,
-                                    f_c=f_cover[i],
+                                    f_c=frac_cover[i],
                                     f_g=frac_green[i],
                                     w_C=h_w_ratio[i],
                                     leaf_width=leaf_width[i],

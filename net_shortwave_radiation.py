@@ -35,12 +35,14 @@ def main(lsp_product, lai_product, csp_product, mi_product, sza_product, soil_re
     
     
     p = su.read_snappy_product(mi_product, 'air_pressure')[0]
-    irradiance = su.read_snappy_product(mi_product, 'clear_sky_solar_irradiance')[0]
+    irradiance = su.read_snappy_product(mi_product, 'clear_sky_solar_radiation')[0]
     
-    sza = su.read_snappy_product(sza_product, 'sza')[0]
+    sza = su.read_snappy_product(sza_product, 'solar_zenith_tn')[0]
    
     net_rad_c = np.zeros(lai.shape)
     net_rad_s = np.zeros(lai.shape)
+    soil_ref_vis = np.full(lai.shape, soil_ref_vis)
+    soil_ref_nir = np.full(lai.shape, soil_ref_nir)
 
     #Estimate diffuse and direct irradiance
     difvis, difnir, fvis, fnir = rad.calc_difuse_ratio(irradiance, sza, p)
@@ -50,7 +52,7 @@ def main(lsp_product, lai_product, csp_product, mi_product, sza_product, soil_re
 
     # Net shortwave radition for bare soil
     i = lai <= 0
-    spectra_soil = fvis[i] * soil_ref_vis + fnir[i] * soil_ref_nir
+    spectra_soil = fvis[i] * soil_ref_vis[i] + fnir[i] * soil_ref_nir[i]
     net_rad_s[i] = (1. - spectra_soil) * (irradiance_dir[i] + irradiance_dif[i])
     
     # Net shortwave radiation for vegetated areas
@@ -70,23 +72,22 @@ def main(lsp_product, lai_product, csp_product, mi_product, sza_product, soil_re
                                                         trans_vis_c[i],
                                                         refl_nir_c[i],
                                                         trans_nir_c[i],
-                                                        soil_ref_vis,
-                                                        soil_ref_nir,
+                                                        soil_ref_vis[i],
+                                                        soil_ref_nir[i],
                                                         lad[i],
                                                         lai_eff
                                                         )
     
 
     band_data = [
-
-            {'band_name': 'net_shortwave_radiation_canopy', 'band_data': net_rad_c}
+            {'band_name': 'net_shortwave_radiation_canopy', 'band_data': net_rad_c},
             {'band_name': 'net_shortwave_radiation_soil', 'band_data': net_rad_s}
     ]
 
     su.write_snappy_product(output_file, band_data, 'netShortwaveRadiation', geo_coding)
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        print("ERROR:" + str(e))
+    #try:
+    main()
+    #except Exception as e:
+    #    print("ERROR:" + str(e))

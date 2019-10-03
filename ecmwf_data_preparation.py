@@ -54,7 +54,7 @@ def main(elevation_map, elevation_band, ecmwf_data_file, date_time_utc, time_zon
         data = eu.get_ECMWF_data(ecmwf_data_file, 'clear_sky_solar_radiation', date_time_utc,
                                  temp_elev_path, time_zone)
         bands.append({'band_data': data, 'band_name': 'clear_sky_solar_radiation', 'description':
-                      'Instantenous clear sky sufrace solar radiation (W/m^2)'})
+                      'Instantenous clear sky surface solar irradiance (W/m^2)'})
     if prepare_daily_solar_irradiance:
         data = eu.get_ECMWF_data(ecmwf_data_file, 'average_daily_solar_irradiance', date_time_utc,
                                  temp_elev_path, time_zone)
