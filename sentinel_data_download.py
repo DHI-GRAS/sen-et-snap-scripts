@@ -50,12 +50,12 @@ def main(aoi_geojson, start_date, end_date, platform, username, password, downlo
     now = datetime.today().strftime("%Y%m%d%H%M%S")
     with open(os.path.join(download_path, "sentinel_data_download_"+now+".txt"), "w") as fp:
         for product in products:
-            print(product['filename'])
+            print(product)
             fp.write(str(product))
 
 
 if __name__ == "__main__":
-    #try:
-    main()
-    #except Exception as e:
-    #    print("ERROR:" + str(e))
+    try:
+        main()
+    except Exception as e:
+        print("ERROR:" + str(e))
