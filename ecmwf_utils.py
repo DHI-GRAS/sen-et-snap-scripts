@@ -120,6 +120,16 @@ def get_ECMWF_data(ecmwf_data_file, field, timedate_UTC, elev, time_zone):
 
 
 def calc_air_temperature_blending_height(ta, ea, p, z_bh, z_ta=2.0):
+    if type(ta) is np.ndarray:
+        ta = ta.astype(np.float32)
+    if type(ea) is np.ndarray:
+        ea = ea.astype(np.float32)
+    if type(p) is np.ndarray:
+        p = p.astype(np.float32)
+    if type(z_bh) is np.ndarray:
+        z_bh = z_bh.astype(np.float32)
+    if type(z_ta) is np.ndarray:
+        z_ta = z_ta.astype(np.float32)
     lapse_rate = met.calc_lapse_rate_moist(ta, ea, p)
     ta_bh = ta - lapse_rate * (z_bh - z_ta)
     return ta_bh
