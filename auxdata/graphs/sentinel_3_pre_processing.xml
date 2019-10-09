@@ -120,7 +120,7 @@
     <parameters class="com.bc.ceres.binding.dom.XppDomElement">
       <targetBands>
         <targetBand>
-          <name>newBand</name>
+          <name>mask</name>
           <type>float32</type>
           <expression>if cloud_in &lt; 1 then 1 else 0</expression>
           <description/>

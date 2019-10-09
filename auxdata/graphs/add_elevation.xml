@@ -4,7 +4,7 @@
     <operator>Read</operator>
     <sources/>
     <parameters class="com.bc.ceres.binding.dom.XppDomElement">
-      <file>INPUT_Sentinel-2_Maks</file>
+      <file>!INPUT_Sentinel-2_Mask!</file>
     </parameters>
   </node>
   <node id="AddElevation">
@@ -43,7 +43,7 @@
       <sourceProduct refid="Subset"/>
     </sources>
     <parameters class="com.bc.ceres.binding.dom.XppDomElement">
-      <file>OUTPUT_SRTM_elevation</file>
+      <file>!OUTPUT_SRTM_elevation!</file>
       <formatName>BEAM-DIMAP</formatName>
     </parameters>
   </node>

@@ -117,7 +117,7 @@
     <parameters class="com.bc.ceres.binding.dom.XppDomElement">
       <targetBands>
         <targetBand>
-          <name>newBand</name>
+          <name>mask</name>
           <type>float32</type>
           <expression>if (quality_scene_classification &gt;= 8 &amp;&amp;  quality_scene_classification &lt;= 10) || quality_scene_classification == 3 then 0 else 1</expression>
           <description/>
