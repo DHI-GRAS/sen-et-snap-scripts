@@ -2,7 +2,13 @@ import numpy as np
 
 import os
 import sys
-sys.path.append(os.path.join(os.path.expanduser("~"), ".snap", "snap-python"))
+snappy_dir = os.path.join(os.path.expanduser("~"), ".snap", "snap-python")
+if os.path.isdir(snappy_dir):    
+    sys.path.append(snappy_dir)
+else:
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    snappy_dir = os.path.join(dir_path, "..", "..", "..", "snap-python")
+    sys.path.append(snappy_dir)
 from snappy import ProductIO, Product, ProductData, ProductUtils, String
 
 
