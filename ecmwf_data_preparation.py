@@ -1,8 +1,9 @@
 import click
 import tempfile
 
-import snappy_utils as su
 import ecmwf_utils as eu
+## snappy_utils should be imported last, as it modifies the system path
+import snappy_utils as su
 
 
 @click.command()

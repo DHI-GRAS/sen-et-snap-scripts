@@ -1,7 +1,5 @@
 import tempfile
 import os.path as pth
-import os
-
 import numpy as np
 
 from pyDMS.pyDMSUtils import saveImg, openRaster, getRasterInfo
@@ -10,8 +8,8 @@ from pyDMS.pyDMSUtils import saveImg, openRaster, getRasterInfo
 #make sure to set the env_variables needed for gdal
 import os
 cur_path =  os.path.dirname(os.path.abspath(__file__))
-os.environ["PROJ_LIB"] = os.path.join(cur_path, "../share/proj")
-os.environ["GDAL_DATA"] = os.path.join(cur_path, "../share/gdal")
+os.environ["PROJ_LIB"] = os.path.join(cur_path, "../Library/share/proj")
+os.environ["GDAL_DATA"] = os.path.join(cur_path, "../Library/share/gdal")
 from osgeo import gdal
 
 

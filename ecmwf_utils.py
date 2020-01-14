@@ -7,11 +7,12 @@ Created on Tue Jul 17 14:47:50 2018
 
 import os
 import datetime
-
 import numpy as np
+cur_path =  os.path.dirname(os.path.abspath(__file__))
+os.environ["PROJ_LIB"] = os.path.join(cur_path, "../Library/share/proj")
+os.environ["GDAL_DATA"] = os.path.join(cur_path, "../Library/share/gdal")
 from osgeo import gdal, osr
 import netCDF4
-import cdsapi
 
 from pyTSEB import meteo_utils as met
 
@@ -24,7 +25,9 @@ Z_BH = 100.0
 
 
 def download_CDS_data(date_start, date_end, variables, target, overwrite=False, area=None):
-
+    if os.path.expanduser('~') == '$USERPROFILE':
+        os.environ['CDSAPI_RC'] = os.path.join(os.getcwd(), '..\\.cdsapirc')
+    import cdsapi
     s = {}
 
     s["variable"] = variables
