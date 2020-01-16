@@ -29,7 +29,7 @@ Z_BH = 100.0
 
 
 def download_CDS_data(date_start, date_end, variables, target, overwrite=False, area=None):
-    if not os.path.isdir(os.path.expanduser('~')):
+    if not os.path.isdir(os.path.expanduser('~')) and not os.getenv('CDSAPI_RC', None):
         os.environ['CDSAPI_RC'] = os.path.join(cur_path, '..\\..\\..\\..\\.cdsapirc')
     import cdsapi
     s = {}
