@@ -29,8 +29,8 @@ Z_BH = 100.0
 
 
 def download_CDS_data(date_start, date_end, variables, target, overwrite=False, area=None):
-    if os.path.expanduser('~') == '$USERPROFILE':
-        os.environ['CDSAPI_RC'] = os.path.join(os.getcwd(), '..\\.cdsapirc')
+    if not os.path.isdir(os.path.expanduser('~')):
+        os.environ['CDSAPI_RC'] = os.path.join(cur_path, '..\\..\\..\\..\\.cdsapirc')
     import cdsapi
     s = {}
 
