@@ -24,7 +24,7 @@ def main(aoi_geojson, start_date, end_date, platform, username, password, downlo
     start_date = start_date.isoformat() + "Z"
     end_date = end_date + timedelta(hours=23, minutes=59, seconds=59)
     end_date = end_date.isoformat() + "Z"
-    if not limit_tiles:
+    if not limit_tiles or limit_tiles == '$limit_tiles':
         limit_tiles = []
     else:
         limit_tiles = limit_tiles.replace(" ", "")
