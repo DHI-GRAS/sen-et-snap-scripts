@@ -33,7 +33,7 @@ def read_snappy_product(file_path, band_name=None):
 
 def write_snappy_product(file_path, bands, product_name, geo_coding):
     try:
-        (width, height) = bands[0]['band_data'].shape
+        (height, width) = bands[0]['band_data'].shape
     except AttributeError:
         raise RuntimeError(bands[0]['band_name'] + "contains no data.")
     product = Product(product_name, product_name, width, height)
