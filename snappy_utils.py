@@ -17,7 +17,7 @@ def read_snappy_product(file_path, band_name=None):
     width = prod.getSceneRasterWidth()
     height = prod.getSceneRasterHeight()
     geo_coding = prod.getSceneGeoCoding()
-    data = np.empty((width, height))
+    data = np.empty((height, width))
     if band_name is not None:
         band = prod.getBand(band_name)
     else:
