@@ -1,0 +1,15 @@
+name: sen_et_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.6.*
+  - numpy=1.18.1
+  - gdal=3.0.4
+  - netcdf4=1.5.3
+  - pip:
+      - sentinelsat==0.13
+      - cdsapi==0.2.7
+      - https://github.com/hectornieto/pyPro4Sail/archive/v2.0.zip
+      - https://github.com/radosuav/pyDMS/archive/master.zip
+      - https://github.com/DHI-GRAS/pyTSEB/archive/optimize.zip
