@@ -24,7 +24,7 @@
       <sourceProduct refid="AddLandCover"/>
     </sources>
     <parameters class="com.bc.ceres.binding.dom.XppDomElement">
-      <sourceBands>CCILandCover-2015</sourceBands>
+      <sourceBands/>
       <region/>
       <referenceBand/>
       <geoRegion/>
