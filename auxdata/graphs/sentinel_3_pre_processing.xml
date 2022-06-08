@@ -4,7 +4,7 @@
     <operator>Read</operator>
     <sources/>
     <parameters class="com.bc.ceres.binding.dom.XppDomElement">
-      <file>!INPUT_Sentinel-3_L2A!</file>
+      <file>!INPUT_Sentinel-3_LST!</file>
     </parameters>
   </node>
   <node id="Subset">
@@ -31,7 +31,7 @@
     </sources>
     <parameters class="com.bc.ceres.binding.dom.XppDomElement">
       <sourceBands/>
-      <region>0,0,0,0</region>
+      <region/>
       <referenceBand/>
       <geoRegion>!INPUT_AOI_WKT!</geoRegion>
       <subSamplingX>1</subSamplingX>
@@ -91,7 +91,7 @@
       <sourceProduct refid="Reproject"/>
     </sources>
     <parameters class="com.bc.ceres.binding.dom.XppDomElement">
-      <sourceBands>sat_zenith_tn,solar_zenith_tn,longitude_tx,latitude_tx</sourceBands>
+      <sourceBands>latitude_tx,longitude_tx,sat_zenith_tn,solar_zenith_tn</sourceBands>
       <region/>
       <referenceBand/>
       <geoRegion/>
