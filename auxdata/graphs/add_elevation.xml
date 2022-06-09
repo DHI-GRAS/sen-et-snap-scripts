@@ -28,7 +28,7 @@
     <parameters class="com.bc.ceres.binding.dom.XppDomElement">
       <sourceBands>elevation</sourceBands>
       <region/>
-      <referenceBand>B2</referenceBand>
+      <referenceBand/>
       <geoRegion/>
       <subSamplingX>1</subSamplingX>
       <subSamplingY>1</subSamplingY>
