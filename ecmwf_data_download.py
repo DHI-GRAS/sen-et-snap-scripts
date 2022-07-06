@@ -8,7 +8,7 @@ from ecmwf_utils import download_CDS_data
 @click.option('--area', required=False)
 @click.option('--start_date', required=True)
 @click.option('--end_date', required=True)
-@click.option('--download_path', required=True, type=click.Path(file_okay=False))
+@click.option('--download_path', required=True, type=click.Path(dir_okay=False))
 @click.option('--download_temperature', required=True, type=click.BOOL)
 @click.option('--download_dewpoint', required=True, type=click.BOOL)
 @click.option('--download_pressure', required=True, type=click.BOOL)
